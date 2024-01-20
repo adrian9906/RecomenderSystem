@@ -11,8 +11,14 @@ def process_Data(data:dict, item:dict):
     
     dfMerge_Data_Item = pd.merge(dfData,dfItem, how='inner',left_on='item_id', right_on='id')
     
+    return dfMerge_Data_Item
+
+def averageData(dfMerge_Data_Item: pd.DataFrame):
     avg_ratings100 = mean_df(dfMerge_Data_Item)
     
+    return avg_ratings100
+
+def get_pivot(data:pd.DataFrame, avg_ratings100):
     merged_df = pd.merge(data, avg_ratings100[['movie_title']], on='movie_title', how='inner')
     
     # Make the user matrix and movies
