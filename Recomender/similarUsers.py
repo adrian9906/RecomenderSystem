@@ -4,10 +4,7 @@ import pandas as pd
 from pandas import DataFrame
 
 
-def similar_users_movies(select_userid,movies_ratings_pivot:pd.DataFrame, similarityDf:pd.DataFrame,n=10,threshold=0.7):  
-    top_similar_users = similarityDf[similarityDf[select_userid]>threshold][select_userid].drop[select_userid].sort_values(ascending=False)[:n]
-    top_similar_usersList = top_similar_users.index.to_list()
-    
+def similar_users_movies(top_similar_usersList:list,movies_ratings_pivot:pd.DataFrame):  
     movies_result = []
     
     for user in top_similar_usersList:
