@@ -1,7 +1,8 @@
 import json
 import pandas as pd
 
-from Pre_Process.mean import mean_df  
+from Pre_Process.mean import mean_df
+from Pre_Process.similarity import cosein_similarity_movies  
 
 
 def process_Data(data:dict, item:dict):
@@ -16,5 +17,5 @@ def process_Data(data:dict, item:dict):
     
     # Make the user matrix and movies
     movies_ratings_pivot = pd.pivot_table(merged_df, index='user_id', columns='movie_title', values='rating', fill_value = 0)
-
     
+    return movies_ratings_pivot
