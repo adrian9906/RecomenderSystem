@@ -3,6 +3,10 @@ from fastapi import FastAPI, BackgroundTasks, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import uvicorn
+from fastapi import FastAPI
+from starlette.exceptions import HTTPException
+from fastapi.exceptions import RequestValidationError
+
 from Pre_Process.mean import mean_df
 
 from Pre_Process.processingDataset import averageData, get_pivot, process_Data
@@ -10,6 +14,9 @@ from Pre_Process.similarity import cosein_similarity_movies, similarity_data
 from Recomender.similarUsers import similar_users_movies
 from Recomender.topSimilarUsers import top_similar_users
 from db.CRUD.Find import FindOne, findDoc
+from logger.exception_handlers import request_validation_exception_handler, http_exception_handler, unhandled_exception_handler
+from logger.middleware import log_request_middleware
+from logger.log_config import log_config
 
 app = FastAPI()
 
@@ -17,12 +24,18 @@ origins = [
     "*"
 ]
 
+app.middleware("http")(log_request_middleware)
+app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(Exception, unhandled_exception_handler)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    
 )
 
 # GET Methods

@@ -7,3 +7,4 @@ cosaslocas.py
 leerArchivo.py
 *.json
 *.pyc
+*.log
