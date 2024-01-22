@@ -6,6 +6,7 @@ import uvicorn
 from Pre_Process.mean import mean_df
 
 from Pre_Process.processingDataset import averageData, process_Data
+from db.CRUD.Find import findDoc
 
 app = FastAPI()
 
@@ -21,12 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/recommend")
 def recommendMovies():
-    with open('./data.json',mode = 'r') as file:
-        data = json.load(file)  
-    with open('./item.json',mode = 'r') as file:
-        item = json.load(file)
+    data = findDoc('RecomenderSystem','UserMovieData')
+    item = findDoc('RecomenderSystem','MovieData')
     dfMerge_Data_Item = process_Data(data,item)
     meanData = mean_df(dfMerge_Data_Item)
     
