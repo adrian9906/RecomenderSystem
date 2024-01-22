@@ -16,7 +16,7 @@ def findDoc(mongodb,collections,query=''):
         if query=='':
             datos=colleccion.find() #Encontramos los documentos que coincidan con la consulta
         else:
-            datos=colleccion.find({query}) #Encontramos los documentos que coincidan con la consulta
+            datos=colleccion.find(query) #Encontramos los documentos que coincidan con la consulta
         
     except pymongo.errors.ConnectionFailure as errorConexion:
         print("Error en:"+errorConexion) #Se ejecuta si la conexión al servidor falla
@@ -32,7 +32,7 @@ def FindOne(mongodb,collections,query):
         cliente = pymongo.MongoClient(MONGO_URI, serverSelectionTimeoutMS=MONGO_TIME_OUT) #nos conectamos al servidor de Mongo
         baseDatos = cliente[mongodb]
         colleccion = baseDatos[collections]
-        datos=colleccion.find_one({query}) #Encontramos el documento que coincida con la consulta
+        datos=colleccion.find_one(query) #Encontramos el documento que coincida con la consulta
     
     except pymongo.errors.ConnectionFailure as errorConexion:
         print("Error en:"+errorConexion)

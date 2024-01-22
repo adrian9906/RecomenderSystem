@@ -14,8 +14,10 @@ def process_Data(data:dict, item:dict):
     return dfMerge_Data_Item
 
 def averageData(dfMerge_Data_Item: pd.DataFrame):
-    avg_ratings100 = mean_df(dfMerge_Data_Item)
-    
+    dataMean = dfMerge_Data_Item.groupby('movie_title').agg(avg_rating = ('rating', 'mean'),
+                                                number_of_ratings = ('rating', 'count')).reset_index()
+    avg_ratings100 = dataMean[dataMean['number_of_ratings']>100]
+
     return avg_ratings100
 
 def get_pivot(data:pd.DataFrame, avg_ratings100):
