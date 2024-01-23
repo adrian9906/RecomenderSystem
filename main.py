@@ -43,8 +43,8 @@ app.add_middleware(
 
 @app.get("/recommend")
 def recommendMovies():
-    data = findDoc('RecomenderSystem','UserMovieData')
-    item = findDoc('RecomenderSystem','MovieData')
+    data = findDoc('RecomenderDataset','UserMovieData')
+    item = findDoc('RecomenderDataset','MovieData')
     dfMerge_Data_Item = process_Data(data,item)
     meanData = mean_df(dfMerge_Data_Item)
     
@@ -52,9 +52,9 @@ def recommendMovies():
     
 @app.get("/recommend/similarUsers")
 def getSimilarUsers(id: int):
-    data = findDoc('RecomenderSystem','UserMovieData')
-    item = findDoc('RecomenderSystem','MovieData')
-    if FindOne('RecomenderSystem','UserMovieData',query={'user_id':id}):
+    data = findDoc('RecomenderDataset','UserMovieData')
+    item = findDoc('RecomenderDataset','MovieData')
+    if FindOne('RecomenderDataset','UserMovieData',query={'user_id':id}):
         dfMerge_Data_Item = process_Data(data,item)
         average = averageData(dfMerge_Data_Item)
         pivot = get_pivot(dfMerge_Data_Item, average)
@@ -71,9 +71,9 @@ def getSimilarUsers(id: int):
 
 @app.get("/recommend/moviesNotWatched")
 def getSimilarMovies(id: int):
-    data = findDoc('RecomenderSystem','UserMovieData')
-    item = findDoc('RecomenderSystem','MovieData')
-    if FindOne('RecomenderSystem','UserMovieData',query={'user_id':id}):
+    data = findDoc('RecomenderDataset','UserMovieData')
+    item = findDoc('RecomenderDataset','MovieData')
+    if FindOne('RecomenderDataset','UserMovieData',query={'user_id':id}):
         dfMerge_Data_Item = process_Data(data,item)
         average = averageData(dfMerge_Data_Item)
         pivot = get_pivot(dfMerge_Data_Item, average)
@@ -89,9 +89,9 @@ def getSimilarMovies(id: int):
 
 @app.get("/recommend/WatchedMovies")
 def getWatchedMovies(id: int,n:int):
-    data = findDoc('RecomenderSystem','UserMovieData')
-    item = findDoc('RecomenderSystem','MovieData')
-    if FindOne('RecomenderSystem','UserMovieData',query={'user_id':id}):
+    data = findDoc('RecomenderDataset','UserMovieData')
+    item = findDoc('RecomenderDataset','MovieData')
+    if FindOne('RecomenderDataset','UserMovieData',query={'user_id':id}):
         dfMerge_Data_Item = process_Data(data,item)
         average = averageData(dfMerge_Data_Item)
         pivot = get_pivot(dfMerge_Data_Item, average)
@@ -105,6 +105,24 @@ def getWatchedMovies(id: int,n:int):
     else:
         return {"User not found in database"}
 
+
+@app.get("/recommend/usersMostSimilars")
+def get_similarUsers(id: int,n:int):
+    data = findDoc('RecomenderDataset','UserMovieData')
+    item = findDoc('RecomenderDataset','MovieData')
+    if FindOne('RecomenderDataset','UserMovieData',query={'user_id':id}):
+        dfMerge_Data_Item = process_Data(data,item)
+        average = averageData(dfMerge_Data_Item)
+        pivot = get_pivot(dfMerge_Data_Item, average)
+        similarityDf = cosein_similarity_movies(pivot)
+        similarUsers = top_similar_users(similarityDf,id,n=10,threshold=0.6)
+        if similarUsers:
+            return {f"The most similar users to user {id} are": similarUsers}
+        else:
+            return {f"Not similar users found for user {id}"}
+    
+    else:
+        return {"User not found in database"}
 if __name__ == "__main__":
     uvicorn.run("main:app",reload='--reload-include', host="127.0.0.1", port=8000, log_level="info")
     
