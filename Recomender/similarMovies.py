@@ -19,12 +19,11 @@ def similarMovies_notWatched(user,similaritydf:pd.DataFrame,avg_ratings100:pd.Da
     
     not_watched_recommend = []
     for movie in weighted_averages_list:
-        rating = round(avg_ratings100.loc[avg_ratings100["movie_title"] == movie,'rating'].iloc[0],2)
+        rating = round(avg_ratings100.loc[avg_ratings100["movie_title"] == movie,'avg_rating'].iloc[0],2)
         dict = {
             'movie':movie,
             'rating': rating
             }
         not_watched_recommend.append(dict)
-        
-        
+    not_watched_recommend = sorted(not_watched_recommend,key=lambda x: x['rating'],reverse = True)
     return not_watched_recommend
