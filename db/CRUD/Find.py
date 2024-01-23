@@ -16,7 +16,7 @@ def findDoc(mongodb,collections,query=''):
         if query=='':
             datos=colleccion.find() #Encontramos los documentos que coincidan con la consulta
         else:
-            datos=colleccion.find(query) #Encontramos los documentos que coincidan con la consulta
+            datos=colleccion.find(query,{'_id':0}) #Encontramos los documentos que coincidan con la consulta
         
     except pymongo.errors.ConnectionFailure as errorConexion:
         print("Error en:"+errorConexion) #Se ejecuta si la conexión al servidor falla

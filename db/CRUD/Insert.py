@@ -1,6 +1,6 @@
 import pymongo
 from pymongo import errors
-from Utilitis.Conexion_MongoDB import Conection_MongoDb
+from db.Utilitis.Conexion_MongoDB import Conection_MongoDb
 import pymongo.collation
 #Función para buscar más de un documento
 #parametros:
@@ -22,7 +22,7 @@ def Insert(mongodb,collections,document):
 
         if find==True:
             print("Documentos Repetidos")
-
+        return find
     except pymongo.errors.ConnectionFailure as errorConexion:
         print("Error en:"+errorConexion)
 

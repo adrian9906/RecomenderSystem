@@ -2,6 +2,7 @@ import json
 from fastapi import FastAPI, BackgroundTasks, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
+from pydantic import BaseModel
 import uvicorn
 from fastapi import FastAPI
 from starlette.exceptions import HTTPException
@@ -15,6 +16,9 @@ from Recomender.similarMovies import similarMovies_notWatched, watchedMovies
 from Recomender.similarUsers import similar_users_movies
 from Recomender.topSimilarUsers import top_similar_users
 from db.CRUD.Find import FindOne, findDoc
+from db.CRUD.Insert import Insert
+from db.Models.Movies import Movies
+from db.Models.User import User
 from logger.exception_handlers import request_validation_exception_handler, http_exception_handler, unhandled_exception_handler
 from logger.middleware import log_request_middleware
 from logger.log_config import log_config
@@ -123,6 +127,45 @@ def get_similarUsers(id: int,n:int):
     
     else:
         return {"User not found in database"}
+    
+# CRUDS
+@app.post("/users/")
+def instertUser(user:User):
+    find = Insert('RecomenderDataset','UseData',user.model_dump())
+    if not find:
+        return {f"User {user.name} added"}
+    else:
+        return {f"Documentos Repetidos"}
+
+
+@app.get('/users/search')
+def getItem(id:int):
+    item = findDoc('RecomenderDataset','UseData',{'id':id})
+    if item is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    else:
+        item = list(item)
+        return item
+    
+@app.post("/items/")
+def instertMovies(movies:Movies):
+    find = Insert('RecomenderDataset','MovieData',movies.model_dump())
+    if not find:
+        return {f"Movies {movies.movie_title} added"}
+    else:
+        return {f"Documentos Repetidos"}
+
+
+@app.get('/items/search')
+def getMovie(id:int):
+    item = findDoc('RecomenderDataset','MovieData',{'id':id})
+    if item is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    else:
+        item = list(item)
+        return item
+
+        
 if __name__ == "__main__":
     uvicorn.run("main:app",reload='--reload-include', host="127.0.0.1", port=8000, log_level="info")
     
