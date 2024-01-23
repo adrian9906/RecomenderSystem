@@ -27,3 +27,12 @@ def similarMovies_notWatched(user,similaritydf:pd.DataFrame,avg_ratings100:pd.Da
         not_watched_recommend.append(dict)
     not_watched_recommend = sorted(not_watched_recommend,key=lambda x: x['rating'],reverse = True)
     return not_watched_recommend
+
+def watchedMovies(user_id:int,movies_ratings_pivot:pd.DataFrame,n):
+    watched_movies = movies_ratings_pivot.loc[movies_ratings_pivot.index == user_id, movies_ratings_pivot.loc[user_id,:]>0]
+    movies = pd.DataFrame(watched_movies).columns.to_list()
+    ratings = pd.DataFrame(watched_movies).values.tolist()[0]
+    movies_dict = {movie: rating for movie , rating in zip(movies,ratings)}
+    movies_dict_sorted = sorted(movies_dict.items(),key= lambda x: x[1],reverse=True)
+    watched_movies_dict = {'user': user_id,'movies':movies_dict_sorted[:n]}
+    return watched_movies_dict
