@@ -49,4 +49,4 @@ Contributions are welcome. To contribute, please follow these guidelines:
 
 ## License 📄
 
-Este proyecto está bajo la MIT license - ve el archivo [LICENSE.md](https://github.com/adrian9906/RecomenderSystem/blob/main/LICENSE) para detalles
+This project is under MIT license - see the file [LICENSE.md](https://github.com/adrian9906/RecomenderSystem/blob/main/LICENSE) for details
